@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/cjgk/gorptest/controllers"
-	"github.com/cjgk/gorptest/models"
+	"github.com/cjgk/quiz/controllers"
+	"github.com/cjgk/quiz/models"
 	"github.com/gorilla/mux"
 	"net/http"
 )

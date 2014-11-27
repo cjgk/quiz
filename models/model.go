@@ -25,7 +25,7 @@ var (
 
 // Initialize gorp for struct mapping
 func InitDb() *gorp.DbMap {
-	db, err := sql.Open("sqlite3", "/tmp/gorptest.sqlite")
+	db, err := sql.Open("sqlite3", "/tmp/quiz.sqlite")
 	checkErr(err, "DB INIT")
 
 	err = db.Ping()

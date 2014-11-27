@@ -3,7 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/cjgk/gorptest/models"
+	"github.com/cjgk/quiz/models"
 	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
