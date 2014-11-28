@@ -4,7 +4,7 @@ import (
 	"code.google.com/p/go.crypto/bcrypt"
 	"database/sql"
 	"github.com/coopernurse/gorp"
-    "os"
+	"os"
 )
 
 type UserFields struct {
@@ -69,11 +69,11 @@ type userService struct {
 }
 
 func NewUserService(dbmap *gorp.DbMap) userServicer {
-    var environment string = os.Getenv("GOENV")
+	var environment string = os.Getenv("GOENV")
 
-    if environment == "TEST" {
-        return  mockUserService{}
-    }
+	if environment == "TEST" {
+		return mockUserService{}
+	}
 
 	return userService{Db: dbmap}
 }

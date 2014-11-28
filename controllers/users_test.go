@@ -1,15 +1,15 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/cjgk/quiz/models"
 	"github.com/coopernurse/gorp"
 	"github.com/gorilla/mux"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-    "encoding/json"
-   "io/ioutil"
 )
 
 var router *mux.Router
@@ -41,33 +41,33 @@ func TestUserGet(t *testing.T) {
 	w := httptest.NewRecorder()
 	router.ServeHTTP(w, req)
 
-    if w.Code != http.StatusOK {
-        t.Errorf("/users/5 did not return %v", http.StatusOK)
-    }
+	if w.Code != http.StatusOK {
+		t.Errorf("/users/5 did not return %v", http.StatusOK)
+	}
 
-    body, err := ioutil.ReadAll(w.Body)
-    if err != nil {
-        t.Errorf("Could not read body")
-    }
+	body, err := ioutil.ReadAll(w.Body)
+	if err != nil {
+		t.Errorf("Could not read body")
+	}
 
-    var user models.User
-    err = json.Unmarshal(body, &user)
-    if err != nil {
-        t.Errorf("Could not unmarshal response to /users/5")
-    }
+	var user models.User
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		t.Errorf("Could not unmarshal response to /users/5")
+	}
 
-    expectedId := 1
-    if user.Id != expectedId {
-        t.Errorf("user.Id is not %v", expectedId)
-    }
+	expectedId := 1
+	if user.Id != expectedId {
+		t.Errorf("user.Id is not %v", expectedId)
+	}
 
-    expectedEmail := "user1@example.com"
-    if user.Email != expectedEmail {
-        t.Error("user.email is not %s", expectedEmail)
-    }
+	expectedEmail := "user1@example.com"
+	if user.Email != expectedEmail {
+		t.Error("user.email is not %s", expectedEmail)
+	}
 
-    expectedName := "User Numberone"
-    if user.Name != expectedName {
-        t.Error("user.name is not %s", expectedName)
-    }
+	expectedName := "User Numberone"
+	if user.Name != expectedName {
+		t.Error("user.name is not %s", expectedName)
+	}
 }

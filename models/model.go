@@ -50,4 +50,3 @@ func InitTableServices(dbmap *gorp.DbMap) Services {
 
 	return services
 }
-
