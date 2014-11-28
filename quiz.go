@@ -22,6 +22,7 @@ func main() {
 	router := mux.NewRouter()
 	router.StrictSlash(false)
 
+    // User routes
 	router.HandleFunc("/users", users.Action(users.Index)).Methods("GET")
 	router.HandleFunc("/users/{key}", users.Action(users.Get)).Methods("GET")
 	router.HandleFunc("/users", users.Action(users.Post)).Methods("POST")
