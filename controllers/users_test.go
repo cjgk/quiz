@@ -13,8 +13,6 @@ import (
 )
 
 var router *mux.Router
-var req *http.Request
-var res *httptest.ResponseRecorder
 
 func setup() {
 	var dbmap *gorp.DbMap
@@ -70,4 +68,26 @@ func TestUserGet(t *testing.T) {
 	if user.Name != expectedName {
 		t.Error("user.name is not %s", expectedName)
 	}
+}
+
+func TestUsersGet(t *testing.T) {
+    setup()
+
+    var users []models.User
+
+    req, _ := http.NewRequest("GET", "/users", nil)
+    rec := httptest.NewRecorder()
+    router.ServeHTTP(rec, req)
+
+    if rec.Code != http.StatusOK {
+        t.Errorf("/users did not return %v", http.StatusOK)
+    }
+
+    body, _ := ioutil.ReadAll(rec.Body)
+    _ = json.Unmarshal(body, &users)
+
+    expectedLength := 2
+    if len(users) != expectedLength {
+        t.Errorf("length of response is not %v", expectedLength)
+    }
 }

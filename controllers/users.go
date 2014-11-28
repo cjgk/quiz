@@ -21,7 +21,6 @@ func (c *UserController) Index(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(users)
 
 	jsonUsers, err := json.Marshal(users)
 	if err != nil {
