@@ -23,11 +23,11 @@ func main() {
 	router.StrictSlash(false)
 
     // User routes
-	router.HandleFunc("/users", users.Action(users.Index)).Methods("GET")
-	router.HandleFunc("/users/{key}", users.Action(users.Get)).Methods("GET")
-	router.HandleFunc("/users", users.Action(users.Post)).Methods("POST")
-	router.HandleFunc("/users/{key}", users.Action(users.Put)).Methods("PUT")
-	router.HandleFunc("/users/{key}", users.Action(users.Delete)).Methods("DELETE")
+	router.Handle("/users", users.Action(users.Index)).Methods("GET")
+	router.Handle("/users/{key}", users.Action(users.Get)).Methods("GET")
+	router.Handle("/users", users.Action(users.Post)).Methods("POST")
+	router.Handle("/users/{key}", users.Action(users.Put)).Methods("PUT")
+	router.Handle("/users/{key}", users.Action(users.Delete)).Methods("DELETE")
 
 	http.Handle("/", router)
 

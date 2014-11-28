@@ -9,8 +9,8 @@ type Action func(rw http.ResponseWriter, r *http.Request) error
 
 type AppController struct{}
 
-func (c *AppController) Action(a Action) func(rw http.ResponseWriter, r *http.Request) {
-	return func(rw http.ResponseWriter, r *http.Request) {
+func (c *AppController) Action(a Action) http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		if err := a(rw, r); err != nil {
 			switch err {
 			case Err400:
@@ -21,7 +21,7 @@ func (c *AppController) Action(a Action) func(rw http.ResponseWriter, r *http.Re
 				http.Error(rw, err.Error(), http.StatusInternalServerError)
 			}
 		}
-	}
+	})
 }
 
 var (
