@@ -75,7 +75,6 @@ func (c *UserController) Post(w http.ResponseWriter, r *http.Request) error {
 }
 
 func (c *UserController) Delete(w http.ResponseWriter, r *http.Request) error {
-
 	user, err := c.getRequestedUser(r)
 	if err != nil {
 		return err
