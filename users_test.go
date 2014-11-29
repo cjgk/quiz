@@ -1,4 +1,4 @@
-package controllers
+package main
 
 import (
 	"encoding/json"
@@ -71,23 +71,23 @@ func TestUserGet(t *testing.T) {
 }
 
 func TestUsersGet(t *testing.T) {
-    setup()
+	setup()
 
-    var users []models.User
+	var users []models.User
 
-    req, _ := http.NewRequest("GET", "/users", nil)
-    rec := httptest.NewRecorder()
-    router.ServeHTTP(rec, req)
+	req, _ := http.NewRequest("GET", "/users", nil)
+	rec := httptest.NewRecorder()
+	router.ServeHTTP(rec, req)
 
-    if rec.Code != http.StatusOK {
-        t.Errorf("/users did not return %v", http.StatusOK)
-    }
+	if rec.Code != http.StatusOK {
+		t.Errorf("/users did not return %v", http.StatusOK)
+	}
 
-    body, _ := ioutil.ReadAll(rec.Body)
-    _ = json.Unmarshal(body, &users)
+	body, _ := ioutil.ReadAll(rec.Body)
+	_ = json.Unmarshal(body, &users)
 
-    expectedLength := 2
-    if len(users) != expectedLength {
-        t.Errorf("length of response is not %v", expectedLength)
-    }
+	expectedLength := 2
+	if len(users) != expectedLength {
+		t.Errorf("length of response is not %v", expectedLength)
+	}
 }

@@ -1,22 +1,20 @@
 package main
 
 import (
-	"github.com/cjgk/quiz/controllers"
-	"github.com/cjgk/quiz/models"
 	"github.com/gorilla/mux"
 	"net/http"
 )
 
 func main() {
 	// Set up Gorp
-	dbmap := models.InitDb()
+	dbmap := InitDb()
 	defer dbmap.Db.Close()
 
 	// Set up Table services
-	tableServices := models.InitTableServices(dbmap)
+	tableServices := InitTableServices(dbmap)
 
 	// Create controllers and add Services to them
-	users := &controllers.UserController{Services: &tableServices}
+	users := &UserController{Services: &tableServices}
 
 	// Set up router
 	router := mux.NewRouter()

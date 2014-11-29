@@ -1,9 +1,8 @@
-package controllers
+package main
 
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/cjgk/quiz/models"
 	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
@@ -11,11 +10,11 @@ import (
 
 type UserController struct {
 	AppController
-	Services *models.Services
+	Services *Services
 }
 
 func (c *UserController) Index(w http.ResponseWriter, r *http.Request) error {
-	var users []models.User
+	var users []User
 
 	err := c.Services.User.RetrieveSet(&users)
 	if err != nil {
@@ -53,7 +52,7 @@ func (c *UserController) Post(w http.ResponseWriter, r *http.Request) error {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 
-	user, err := models.NewUser(name, email, password)
+	user, err := NewUser(name, email, password)
 	if err != nil {
 		return Err400
 	}
@@ -94,7 +93,7 @@ func (c *UserController) Put(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	name := r.FormValue("name")
-	email := r.FormValue("email_address")
+	email := r.FormValue("email")
 	password := r.FormValue("password")
 
 	if len(name) > 0 {
@@ -106,7 +105,7 @@ func (c *UserController) Put(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	if len(password) > 0 {
-		pwHash, err := models.HashPw(password)
+		pwHash, err := HashPw(password)
 		if err != nil {
 			return err
 		}
@@ -129,9 +128,9 @@ func (c *UserController) Put(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *UserController) getRequestedUser(r *http.Request) (models.User, error) {
+func (c *UserController) getRequestedUser(r *http.Request) (User, error) {
 	vars := mux.Vars(r)
-	user := models.User{}
+	user := User{}
 
 	userId, err := strconv.Atoi(vars["key"])
 	if err != nil {
@@ -139,7 +138,7 @@ func (c *UserController) getRequestedUser(r *http.Request) (models.User, error) 
 	}
 
 	err = c.Services.User.Retrieve(&user, userId)
-	if err == models.ErrNotFound {
+	if err == ErrNotFound {
 		return user, Err404
 	} else if err != nil {
 		return user, Err500

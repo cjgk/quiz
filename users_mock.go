@@ -1,4 +1,4 @@
-package models
+package main
 
 type mockUserService struct{}
 
@@ -17,21 +17,17 @@ func (mus mockUserService) Retrieve(user *User, id int) error {
 
 func (mus mockUserService) RetrieveSet(users *[]User) error {
 	user1 := User{
-		UserFields{
-			Id:      1,
-			Deleted: false,
-			Email:   "user1@example.com",
-			Name:    "User Numberone",
-		},
+		Id:      1,
+		Deleted: false,
+		Email:   "user1@example.com",
+		Name:    "User Numberone",
 	}
 
 	user2 := User{
-		UserFields{
-			Id:      2,
-			Deleted: false,
-			Email:   "user2@example.com",
-			Name:    "User Numbertwo",
-		},
+		Id:      2,
+		Deleted: false,
+		Email:   "user2@example.com",
+		Name:    "User Numbertwo",
 	}
 
 	*users = append(*users, user1, user2)

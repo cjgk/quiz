@@ -1,22 +1,19 @@
-package models
+package main
 
 import (
 	"code.google.com/p/go.crypto/bcrypt"
 	"database/sql"
+	"fmt"
 	"github.com/coopernurse/gorp"
 	"os"
 )
 
-type UserFields struct {
+type User struct {
 	Id       int    `json:"id"`
 	Deleted  bool   `json:"-"`
 	Email    string `json:"email"`
 	Name     string `json:"name"`
 	Password string `json:"-"`
-}
-
-type User struct {
-	UserFields
 }
 
 func NewUser(name, email, password string) (User, error) {
@@ -27,34 +24,13 @@ func NewUser(name, email, password string) (User, error) {
 	}
 
 	user = User{
-		UserFields{
-			Deleted:  false,
-			Email:    email,
-			Name:     name,
-			Password: pwHash,
-		},
+		Deleted:  false,
+		Email:    email,
+		Name:     name,
+		Password: pwHash,
 	}
 
 	return user, nil
-}
-
-func (u *User) Populate(uf UserFields) error {
-	u.Id = uf.Id
-	u.Deleted = uf.Deleted
-	u.Email = uf.Email
-	u.Name = uf.Name
-	u.Password = uf.Password
-	return nil
-}
-
-func (u *User) Extract() UserFields {
-	return UserFields{
-		Id:       u.Id,
-		Deleted:  u.Deleted,
-		Email:    u.Email,
-		Name:     u.Name,
-		Password: u.Password,
-	}
 }
 
 type userServicer interface {
@@ -80,15 +56,12 @@ func NewUserService(dbmap *gorp.DbMap) userServicer {
 
 func (us userService) Retrieve(user *User, id int) error {
 	query := "select * from users where deleted = 0 and id = ?"
-	userFields := UserFields{}
-	err := us.Db.SelectOne(&userFields, query, id)
+	err := us.Db.SelectOne(&user, query, id)
 	if err == sql.ErrNoRows {
 		return ErrNotFound
 	} else if err != nil {
 		return err
 	}
-
-	user.Populate(userFields)
 
 	return nil
 }
@@ -106,29 +79,27 @@ func (us userService) RetrieveSet(users *[]User) error {
 func (us userService) Save(user *User) error {
 	var err error
 
-	userFields := user.Extract()
-	if userFields.Id == 0 {
-		err = us.Db.Insert(&userFields)
+	fmt.Println(user)
+
+	if user.Id == 0 {
+		err = us.Db.Insert(user)
 	} else {
-		_, err = us.Db.Update(&userFields)
+		_, err = us.Db.Update(user)
 	}
 
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
-
-	user.Populate(userFields)
 
 	return nil
 }
 
 func (us userService) Delete(user *User) error {
-	userFields := user.Extract()
-	userFields.Deleted = true
-	if _, err := us.Db.Update(&userFields); err != nil {
+	user.Deleted = true
+	if _, err := us.Db.Update(user); err != nil {
 		return err
 	}
-	user.Populate(userFields)
 
 	return nil
 }
