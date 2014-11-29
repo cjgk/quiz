@@ -17,8 +17,9 @@ type User struct {
 }
 
 func newUser(name, email, password string) (User, error) {
-	pwHash, err := HashPw(password)
 	user := User{}
+
+	pwHash, err := HashPw(password)
 	if err != nil {
 		return user, err
 	}
