@@ -7,10 +7,12 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"os"
+	"time"
 )
 
 type services struct {
 	user userServicer
+	game gameServicer
 }
 
 func checkErr(err error, msg string) {
@@ -46,7 +48,13 @@ func initDb() *gorp.DbMap {
 func initTableServices(dbmap *gorp.DbMap) services {
 	services := services{
 		user: newUserService(dbmap),
+		game: newGameService(dbmap),
 	}
 
 	return services
+}
+
+// Database helpers
+func dateTimeToDbDateTime(dateTime time.Time) string {
+	return dateTime.UTC().Format("2006-01-02 03:04.000 (UTC)")
 }
