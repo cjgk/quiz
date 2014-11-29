@@ -10,6 +10,9 @@ func main() {
 	dbmap := initDb()
 	defer dbmap.Db.Close()
 
+	// Set up static file server
+	fileServer := http.FileServer(http.Dir("static"))
+
 	// Set up Table services
 	tableServices := initTableServices(dbmap)
 
@@ -20,6 +23,9 @@ func main() {
 	router := mux.NewRouter()
 	router.StrictSlash(false)
 
+	// Static route
+	router.Handle("/", fileServer)
+
 	// User routes
 	router.Handle("/users", users.action(users.index)).Methods("GET")
 	router.Handle("/users/{key}", users.action(users.get)).Methods("GET")
@@ -28,6 +34,5 @@ func main() {
 	router.Handle("/users/{key}", users.action(users.delete)).Methods("DELETE")
 
 	http.Handle("/", router)
-
 	http.ListenAndServe(":3001", nil)
 }
