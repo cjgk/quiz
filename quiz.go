@@ -11,7 +11,7 @@ func main() {
 	defer dbmap.Db.Close()
 
 	// Set up static file server
-	fileServer := http.FileServer(http.Dir("static"))
+	fileServer := http.FileServer(http.Dir("./public/"))
 
 	// Set up Table services
 	tableServices := initTableServices(dbmap)
@@ -24,7 +24,7 @@ func main() {
 	router.StrictSlash(false)
 
 	// Static route
-	router.Handle("/", fileServer)
+	router.PathPrefix("/").Handler(fileServer)
 
 	// User routes
 	router.Handle("/users", users.action(users.index)).Methods("GET")
