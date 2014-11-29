@@ -21,9 +21,9 @@ func main() {
 	router.StrictSlash(false)
 
 	// User routes
-	router.Handle("/users",       users.action(users.index)).Methods("GET")
+	router.Handle("/users", users.action(users.index)).Methods("GET")
 	router.Handle("/users/{key}", users.action(users.get)).Methods("GET")
-	router.Handle("/users",       users.action(users.post)).Methods("POST")
+	router.Handle("/users", users.action(users.post)).Methods("POST")
 	router.Handle("/users/{key}", users.action(users.put)).Methods("PUT")
 	router.Handle("/users/{key}", users.action(users.delete)).Methods("DELETE")
 
