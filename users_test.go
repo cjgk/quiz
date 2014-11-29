@@ -18,7 +18,7 @@ func setup() {
 	var dbmap *gorp.DbMap
 	tableServices := models.InitTableServices(dbmap)
 
-	users := &UserController{Services: &tableServices}
+	users := &userController{Services: &tableServices}
 
 	router = mux.NewRouter()
 	router.Handle("/users", users.Action(users.Index)).Methods("GET")

@@ -5,11 +5,11 @@ import (
 	"net/http"
 )
 
-type Action func(rw http.ResponseWriter, r *http.Request) error
+type action func(rw http.ResponseWriter, r *http.Request) error
 
-type AppController struct{}
+type appController struct{}
 
-func (c *AppController) Action(a Action) http.Handler {
+func (c *appController) action(a action) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		if err := a(rw, r); err != nil {
 			switch err {

@@ -8,15 +8,15 @@ import (
 	"strconv"
 )
 
-type UserController struct {
-	AppController
-	Services *Services
+type userController struct {
+	appController
+	services *services
 }
 
-func (c *UserController) Index(w http.ResponseWriter, r *http.Request) error {
+func (c *userController) index(w http.ResponseWriter, r *http.Request) error {
 	var users []User
 
-	err := c.Services.User.RetrieveSet(&users)
+	err := c.services.user.RetrieveSet(&users)
 	if err != nil {
 		return err
 	}
@@ -31,7 +31,7 @@ func (c *UserController) Index(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *UserController) Get(w http.ResponseWriter, r *http.Request) error {
+func (c *userController) get(w http.ResponseWriter, r *http.Request) error {
 	user, err := c.getRequestedUser(r)
 	if err != nil {
 		return err
@@ -47,17 +47,17 @@ func (c *UserController) Get(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *UserController) Post(w http.ResponseWriter, r *http.Request) error {
+func (c *userController) post(w http.ResponseWriter, r *http.Request) error {
 	name := r.FormValue("name")
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 
-	user, err := NewUser(name, email, password)
+	user, err := newUser(name, email, password)
 	if err != nil {
 		return Err400
 	}
 
-	if err := c.Services.User.Save(&user); err != nil {
+	if err := c.services.user.Save(&user); err != nil {
 		return Err500
 	}
 
@@ -72,13 +72,13 @@ func (c *UserController) Post(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *UserController) Delete(w http.ResponseWriter, r *http.Request) error {
+func (c *userController) delete(w http.ResponseWriter, r *http.Request) error {
 	user, err := c.getRequestedUser(r)
 	if err != nil {
 		return err
 	}
 
-	err = c.Services.User.Delete(&user)
+	err = c.services.user.Delete(&user)
 	if err != nil {
 		return Err500
 	}
@@ -86,7 +86,7 @@ func (c *UserController) Delete(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *UserController) Put(w http.ResponseWriter, r *http.Request) error {
+func (c *userController) put(w http.ResponseWriter, r *http.Request) error {
 	user, err := c.getRequestedUser(r)
 	if err != nil {
 		return err
@@ -113,7 +113,7 @@ func (c *UserController) Put(w http.ResponseWriter, r *http.Request) error {
 		user.Password = pwHash
 	}
 
-	err = c.Services.User.Save(&user)
+	err = c.services.user.Save(&user)
 	if err != nil {
 		return Err500
 	}
@@ -128,7 +128,7 @@ func (c *UserController) Put(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *UserController) getRequestedUser(r *http.Request) (User, error) {
+func (c *userController) getRequestedUser(r *http.Request) (User, error) {
 	vars := mux.Vars(r)
 	user := User{}
 
@@ -137,7 +137,7 @@ func (c *UserController) getRequestedUser(r *http.Request) (User, error) {
 		return user, Err400
 	}
 
-	err = c.Services.User.Retrieve(&user, userId)
+	err = c.services.user.Retrieve(&user, userId)
 	if err == ErrNotFound {
 		return user, Err404
 	} else if err != nil {

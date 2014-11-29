@@ -16,11 +16,11 @@ type User struct {
 	Password string `json:"-"`
 }
 
-func NewUser(name, email, password string) (User, error) {
+func newUser(name, email, password string) (User, error) {
 	pwHash, err := HashPw(password)
 	user := User{}
 	if err != nil {
-		return User{}, err
+		return user, err
 	}
 
 	user = User{
@@ -44,7 +44,7 @@ type userService struct {
 	Db *gorp.DbMap
 }
 
-func NewUserService(dbmap *gorp.DbMap) userServicer {
+func newUserService(dbmap *gorp.DbMap) userServicer {
 	var environment string = os.Getenv("GOENV")
 
 	if environment == "TEST" {
@@ -79,8 +79,6 @@ func (us userService) RetrieveSet(users *[]User) error {
 func (us userService) Save(user *User) error {
 	var err error
 
-	fmt.Println(user)
-
 	if user.Id == 0 {
 		err = us.Db.Insert(user)
 	} else {
@@ -110,7 +108,6 @@ func HashPw(pass string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
 	strHashPass := string(pwHash)
 
 	return strHashPass, nil

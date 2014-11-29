@@ -1,6 +1,6 @@
 package main
 
 type homeController struct {
-    AppController
-    Services *Services
+    appController
+    services *services
 }

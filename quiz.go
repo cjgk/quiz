@@ -7,25 +7,25 @@ import (
 
 func main() {
 	// Set up Gorp
-	dbmap := InitDb()
+	dbmap := initDb()
 	defer dbmap.Db.Close()
 
 	// Set up Table services
-	tableServices := InitTableServices(dbmap)
+	tableServices := initTableServices(dbmap)
 
-	// Create controllers and add Services to them
-	users := &UserController{Services: &tableServices}
+	// Create controllers and add ervices to them
+	users := &userController{services: &tableServices}
 
 	// Set up router
 	router := mux.NewRouter()
 	router.StrictSlash(false)
 
 	// User routes
-	router.Handle("/users", users.Action(users.Index)).Methods("GET")
-	router.Handle("/users/{key}", users.Action(users.Get)).Methods("GET")
-	router.Handle("/users", users.Action(users.Post)).Methods("POST")
-	router.Handle("/users/{key}", users.Action(users.Put)).Methods("PUT")
-	router.Handle("/users/{key}", users.Action(users.Delete)).Methods("DELETE")
+	router.Handle("/users",       users.action(users.index)).Methods("GET")
+	router.Handle("/users/{key}", users.action(users.get)).Methods("GET")
+	router.Handle("/users",       users.action(users.post)).Methods("POST")
+	router.Handle("/users/{key}", users.action(users.put)).Methods("PUT")
+	router.Handle("/users/{key}", users.action(users.delete)).Methods("DELETE")
 
 	http.Handle("/", router)
 

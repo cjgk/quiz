@@ -9,8 +9,8 @@ import (
 	"os"
 )
 
-type Services struct {
-	User userServicer
+type services struct {
+	user userServicer
 }
 
 func checkErr(err error, msg string) {
@@ -24,7 +24,7 @@ var (
 )
 
 // Initialize gorp for struct mapping
-func InitDb() *gorp.DbMap {
+func initDb() *gorp.DbMap {
 	db, err := sql.Open("sqlite3", "/tmp/quiz.sqlite")
 	checkErr(err, "DB INIT")
 
@@ -42,10 +42,10 @@ func InitDb() *gorp.DbMap {
 	return dbmap
 }
 
-// Initalize Services
-func InitTableServices(dbmap *gorp.DbMap) Services {
-	services := Services{
-		User: NewUserService(dbmap),
+// Initalize services
+func initTableServices(dbmap *gorp.DbMap) services {
+	services := services{
+		user: newUserService(dbmap),
 	}
 
 	return services
