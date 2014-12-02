@@ -37,6 +37,7 @@ func initDb() *gorp.DbMap {
 	dbmap.TraceOn("[gorp]", log.New(os.Stdout, "myapp:", log.Lmicroseconds))
 
 	dbmap.AddTableWithName(User{}, "users").SetKeys(true, "Id")
+	dbmap.AddTableWithName(Game{}, "games").SetKeys(true, "Id")
 
 	err = dbmap.CreateTablesIfNotExists()
 	checkErr(err, "Create tables failed")
@@ -56,5 +57,5 @@ func initTableServices(dbmap *gorp.DbMap) services {
 
 // Database helpers
 func dateTimeToDbDateTime(dateTime time.Time) string {
-	return dateTime.UTC().Format("2006-01-02 03:04.000 (UTC)")
+	return dateTime.UTC().Format("2006-01-02 15:04:05")
 }
