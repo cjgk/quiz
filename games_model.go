@@ -9,19 +9,20 @@ import (
 )
 
 type Game struct {
-	Id      int    `json:"id"`
-	Deleted bool   `json:"-"`
-	Created string `json:"created"`
-	UserId  int    `json:"-",db:"user_id"`
-	Status  string `json:"status"`
-	Name    string `json:"name"`
+	Id      int       `db:"id"      json:"id"`
+	Deleted bool      `db:"deleted" json:"-"`
+	Created time.Time `db:"created" json:"created"`
+	UserId  int       `db:"user_id" json:"-"`
+	Status  string    `db:"status"  json:"status"`
+	Name    string    `db:"name"    json:"name"`
 }
 
 func newGame(name string, userId int) Game {
 	return Game{
 		Deleted: false,
-		Created: dateTimeToDbDateTime(time.Now()),
+		Created: time.Now().UTC(),
 		UserId:  userId,
+		Status:  "new",
 		Name:    name,
 	}
 }

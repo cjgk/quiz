@@ -9,11 +9,11 @@ import (
 )
 
 type User struct {
-	Id       int    `json:"id"`
-	Deleted  bool   `json:"-"`
-	Email    string `json:"email"`
-	Name     string `json:"name"`
-	Password string `json:"-"`
+	Id       int    `db:"id"       json:"id"`
+	Deleted  bool   `db:"deleted"  json:"-"`
+	Email    string `db:"email"    json:"email"`
+	Name     string `db:"name"     json:"name"`
+	Password string `db:"password" json:"-"`
 }
 
 func newUser(name, email, password string) (User, error) {
