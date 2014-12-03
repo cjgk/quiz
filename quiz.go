@@ -22,7 +22,7 @@ func main() {
 
 	// Set up router
 	router := mux.NewRouter()
-	router.StrictSlash(false)
+	router.StrictSlash(true)
 
 	// Static route
 	//router.PathPrefix("/").Handler(fileServer)
