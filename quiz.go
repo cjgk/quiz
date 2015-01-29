@@ -12,7 +12,7 @@ func main() {
 	defer dbmap.Db.Close()
 
 	// Set up static file server
-	//fileServer := http.FileServer(http.Dir("./public/"))
+	fileServer := http.FileServer(http.Dir("./public/"))
 
     // Set up Sessions service
     sessionsStore := sessions.NewCookieStore([]byte("laksdjflöaskjdfölaskdjf"))
@@ -28,9 +28,6 @@ func main() {
 	// Set up router
 	router := mux.NewRouter()
 	router.StrictSlash(true)
-
-	// Static route
-	//router.PathPrefix("/").Handler(fileServer)
 
 	// User routes
 	router.Handle("/users",       users.authAction(users.index, sessionsStore)).Methods("GET")
@@ -50,6 +47,10 @@ func main() {
 	router.Handle("/games", games.action(games.post)).Methods("POST")
 	router.Handle("/games/{key}", games.action(games.put)).Methods("PUT")
 	router.Handle("/games/{key}", games.action(games.delete)).Methods("DELETE")
+
+	// Static route
+	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fileServer))
+
 
 	http.Handle("/", router)
 	http.ListenAndServe(":3001", nil)
