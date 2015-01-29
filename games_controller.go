@@ -4,16 +4,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 	"net/http"
 	"strconv"
-	"github.com/gorilla/sessions"
 )
 
 type gameController struct {
 	appController
 	services *services
-    session *sessions.CookieStore
-
+	session  *sessions.CookieStore
 }
 
 func (c *gameController) index(w http.ResponseWriter, r *http.Request) error {

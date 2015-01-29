@@ -12,7 +12,7 @@ import (
 type userController struct {
 	appController
 	services *services
-    session *sessions.CookieStore
+	session  *sessions.CookieStore
 }
 
 func (c *userController) index(w http.ResponseWriter, r *http.Request) error {

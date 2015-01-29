@@ -39,7 +39,7 @@ type userServicer interface {
 	RetrieveSet(users *[]User) error
 	Save(user *User) error
 	Delete(user *User) error
-    RetrieveByEmail(user *User, email string) error
+	RetrieveByEmail(user *User, email string) error
 }
 
 type userService struct {

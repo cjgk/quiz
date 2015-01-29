@@ -9,7 +9,7 @@ import (
 type sessionsController struct {
 	appController
 	services *services
-    session *sessions.CookieStore
+	session  *sessions.CookieStore
 }
 
 func (c *sessionsController) post(w http.ResponseWriter, r *http.Request) error {
@@ -17,22 +17,22 @@ func (c *sessionsController) post(w http.ResponseWriter, r *http.Request) error 
 	password := r.FormValue("password")
 	_, _ = email, password
 
-    user := User{}
-    err := c.services.user.RetrieveByEmail(&user, email);
-    if err != nil {
-        return err
-    }
+	user := User{}
+	err := c.services.user.RetrieveByEmail(&user, email)
+	if err != nil {
+		return err
+	}
 
-    if err = validatePw(password, user.Password); err != nil {
-        return Err401
-    }
+	if err = validatePw(password, user.Password); err != nil {
+		return Err401
+	}
 
-    session, err := c.session.Get(r, "login")
-    if err != nil {
-        return err
-    }
-    session.Values["id"] = user.Id
-    session.Save(r, w)
+	session, err := c.session.Get(r, "login")
+	if err != nil {
+		return err
+	}
+	session.Values["id"] = user.Id
+	session.Save(r, w)
 
 	w.WriteHeader(http.StatusCreated)
 

@@ -36,7 +36,7 @@ func (mus mockUserService) RetrieveSet(users *[]User) error {
 }
 
 func (mus mockUserService) RetrieveByEmail(user *User, email string) error {
-    return nil
+	return nil
 }
 
 func (mus mockUserService) Save(user *User) error {

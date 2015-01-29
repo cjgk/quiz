@@ -14,8 +14,8 @@ func main() {
 	// Set up static file server
 	fileServer := http.FileServer(http.Dir("./public/"))
 
-    // Set up Sessions service
-    sessionsStore := sessions.NewCookieStore([]byte("laksdjflöaskjdfölaskdjf"))
+	// Set up Sessions service
+	sessionsStore := sessions.NewCookieStore([]byte("laksdjflöaskjdfölaskdjf"))
 
 	// Set up Table services
 	tableServices := initTableServices(dbmap)
@@ -30,9 +30,9 @@ func main() {
 	router.StrictSlash(true)
 
 	// User routes
-	router.Handle("/users",       users.authAction(users.index, sessionsStore)).Methods("GET")
+	router.Handle("/users", users.authAction(users.index, sessionsStore)).Methods("GET")
 	router.Handle("/users/{key}", users.authAction(users.get, sessionsStore)).Methods("GET")
-	router.Handle("/users",       users.authAction(users.post, sessionsStore)).Methods("POST")
+	router.Handle("/users", users.authAction(users.post, sessionsStore)).Methods("POST")
 	router.Handle("/users/{key}", users.authAction(users.put, sessionsStore)).Methods("PUT")
 	router.Handle("/users/{key}", users.authAction(users.delete, sessionsStore)).Methods("DELETE")
 
@@ -50,7 +50,6 @@ func main() {
 
 	// Static route
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fileServer))
-
 
 	http.Handle("/", router)
 	http.ListenAndServe(":3001", nil)
