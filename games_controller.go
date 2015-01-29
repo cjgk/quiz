@@ -6,11 +6,14 @@ import (
 	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
+	"github.com/gorilla/sessions"
 )
 
 type gameController struct {
 	appController
 	services *services
+    session *sessions.CookieStore
+
 }
 
 func (c *gameController) index(w http.ResponseWriter, r *http.Request) error {

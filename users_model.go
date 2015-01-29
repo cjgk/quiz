@@ -39,6 +39,7 @@ type userServicer interface {
 	RetrieveSet(users *[]User) error
 	Save(user *User) error
 	Delete(user *User) error
+    RetrieveByEmail(user *User, email string) error
 }
 
 type userService struct {
@@ -71,6 +72,18 @@ func (us userService) RetrieveSet(users *[]User) error {
 	query := "select * from users where deleted = 0"
 	_, err := us.Db.Select(users, query)
 	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (us userService) RetrieveByEmail(user *User, email string) error {
+	query := "select * from users where deleted = 0 and email = ?"
+	err := us.Db.SelectOne(&user, query, email)
+	if err == sql.ErrNoRows {
+		return ErrNotFound
+	} else if err != nil {
 		return err
 	}
 

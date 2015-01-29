@@ -35,6 +35,10 @@ func (mus mockUserService) RetrieveSet(users *[]User) error {
 	return nil
 }
 
+func (mus mockUserService) RetrieveByEmail(user *User, email string) error {
+    return nil
+}
+
 func (mus mockUserService) Save(user *User) error {
 	if user.Id == 0 {
 		user.Id = 3
