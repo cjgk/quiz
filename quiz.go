@@ -38,7 +38,7 @@ func main() {
 
 	// Session routes
 	router.Handle("/sessions", sessions.action(sessions.post)).Methods("POST")
-	router.Handle("/sessions/{key}", sessions.authAction(sessions.delete, sessionsStore)).Methods("DELETE")
+	router.Handle("/sessions", sessions.authAction(sessions.delete, sessionsStore)).Methods("DELETE")
 	router.Handle("/sessions.*", sessions.action(sessions.notImp)).Methods("GET", "PUT")
 
 	// Game routes
