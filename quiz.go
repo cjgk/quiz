@@ -38,15 +38,15 @@ func main() {
 
 	// Session routes
 	router.Handle("/sessions", sessions.action(sessions.post)).Methods("POST")
-	router.Handle("/sessions/{key}", sessions.action(sessions.delete)).Methods("DELETE")
+	router.Handle("/sessions/{key}", sessions.authAction(sessions.delete, sessionsStore)).Methods("DELETE")
 	router.Handle("/sessions.*", sessions.action(sessions.notImp)).Methods("GET", "PUT")
 
 	// Game routes
-	router.Handle("/games", games.action(games.index)).Methods("GET")
-	router.Handle("/games/{key}", games.action(games.get)).Methods("GET")
-	router.Handle("/games", games.action(games.post)).Methods("POST")
-	router.Handle("/games/{key}", games.action(games.put)).Methods("PUT")
-	router.Handle("/games/{key}", games.action(games.delete)).Methods("DELETE")
+	router.Handle("/games", games.authAction(games.index, sessionsStore)).Methods("GET")
+	router.Handle("/games/{key}", games.authAction(games.get, sessionsStore)).Methods("GET")
+	router.Handle("/games", games.authAction(games.post, sessionsStore)).Methods("POST")
+	router.Handle("/games/{key}", games.authAction(games.put, sessionsStore)).Methods("PUT")
+	router.Handle("/games/{key}", games.authAction(games.delete, sessionsStore)).Methods("DELETE")
 
 	// Static route
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fileServer))
