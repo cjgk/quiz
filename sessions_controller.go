@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"net/http"
 )
@@ -39,8 +38,14 @@ func (c *sessionsController) post(w http.ResponseWriter, r *http.Request) error 
 }
 
 func (c *sessionsController) delete(w http.ResponseWriter, r *http.Request) error {
-	vars := mux.Vars(r)
-	_ = vars
+	session, err := c.session.Get(r, "login")
+	if err != nil {
+		return err
+	}
+
+	// Make session too old
+	session.Options.MaxAge = -1
+	session.Save(r, w)
 
 	return nil
 }
