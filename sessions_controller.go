@@ -15,7 +15,6 @@ type sessionsController struct {
 func (c *sessionsController) post(w http.ResponseWriter, r *http.Request) error {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
-	_, _ = email, password
 
 	user := User{}
 	err := c.services.user.RetrieveByEmail(&user, email)
