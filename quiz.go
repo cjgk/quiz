@@ -32,7 +32,7 @@ func main() {
 	// User routes
 	router.Handle("/users", users.authAction(users.index, sessionsStore)).Methods("GET")
 	router.Handle("/users/{key}", users.authAction(users.get, sessionsStore)).Methods("GET")
-	router.Handle("/users", users.authAction(users.post, sessionsStore)).Methods("POST")
+	router.Handle("/users", users.action(users.post)).Methods("POST")
 	router.Handle("/users/{key}", users.authAction(users.put, sessionsStore)).Methods("PUT")
 	router.Handle("/users/{key}", users.authAction(users.delete, sessionsStore)).Methods("DELETE")
 
