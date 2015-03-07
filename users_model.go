@@ -3,10 +3,14 @@ package main
 import (
 	"code.google.com/p/go.crypto/bcrypt"
 	"database/sql"
-	"fmt"
+	"errors"
 	"github.com/coopernurse/gorp"
+	"log"
 	"os"
+	"strings"
 )
+
+var ErrEmailExists = errors.New("users: email exists")
 
 type User struct {
 	Id       int    `db:"id"       json:"id"`
@@ -100,7 +104,10 @@ func (us userService) Save(user *User) error {
 	}
 
 	if err != nil {
-		fmt.Println(err)
+		if strings.Index(err.Error(), "UNIQUE") == 0 {
+			err = ErrEmailExists
+		}
+		log.Print(err)
 		return err
 	}
 

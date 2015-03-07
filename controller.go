@@ -39,6 +39,8 @@ func (c *appController) runAction(a action, rw http.ResponseWriter, r *http.Requ
 			http.Error(rw, err.Error(), http.StatusUnauthorized)
 		case Err404:
 			http.Error(rw, err.Error(), http.StatusNotFound)
+		case Err409:
+			http.Error(rw, err.Error(), http.StatusConflict)
 		default:
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
@@ -49,5 +51,6 @@ var (
 	Err400 = errors.New("Bad input")
 	Err401 = errors.New("Unauthorized")
 	Err404 = errors.New("Not found")
+	Err409 = errors.New("Conflict")
 	Err500 = errors.New("Internal Server Error")
 )

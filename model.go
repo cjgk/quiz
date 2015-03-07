@@ -36,7 +36,9 @@ func initDb() *gorp.DbMap {
 	dbmap := &gorp.DbMap{Db: db, Dialect: gorp.SqliteDialect{}}
 	dbmap.TraceOn("[gorp]", log.New(os.Stdout, "myapp:", log.Lmicroseconds))
 
-	dbmap.AddTableWithName(User{}, "users").SetKeys(true, "Id")
+	usersMap := dbmap.AddTableWithName(User{}, "users")
+	usersMap.SetKeys(true, "Id")
+	usersMap.ColMap("email").Unique = true
 	dbmap.AddTableWithName(Game{}, "games").SetKeys(true, "Id")
 
 	err = dbmap.CreateTablesIfNotExists()

@@ -60,6 +60,10 @@ func (c *userController) post(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	if err := c.services.user.Save(&user); err != nil {
+		if err == ErrEmailExists {
+			return Err409
+		}
+
 		return Err500
 	}
 
