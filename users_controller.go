@@ -3,10 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
-	"github.com/gorilla/sessions"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 )
 
 type userController struct {

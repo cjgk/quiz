@@ -1,9 +1,10 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
-	"net/http"
 )
 
 func main() {
@@ -21,6 +22,7 @@ func main() {
 	tableServices := initTableServices(dbmap)
 
 	// Create controllers and add ervices to them
+	home := &homeController{services: &tableServices, session: sessionsStore}
 	users := &userController{services: &tableServices, session: sessionsStore}
 	games := &gameController{services: &tableServices, session: sessionsStore}
 	sessions := &sessionsController{services: &tableServices, session: sessionsStore}
@@ -28,6 +30,9 @@ func main() {
 	// Set up router
 	router := mux.NewRouter()
 	router.StrictSlash(true)
+
+	// Home route
+	router.Handle("/", home.action(home.index)).Methods("GET")
 
 	// User routes
 	router.Handle("/users", users.authAction(users.index, sessionsStore)).Methods("GET")
@@ -52,5 +57,5 @@ func main() {
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fileServer))
 
 	http.Handle("/", router)
-	http.ListenAndServe(":3001", nil)
+	http.ListenAndServe(":3000", nil)
 }
