@@ -7,9 +7,8 @@ var webpack = require('webpack'),
 
 module.exports = {  
   target: 'web',
-  cache: true,
   entry: {
-    module: path.join(clientPath, 'module.js'),
+    bundle: path.join(clientPath, 'quiz.js'),
     common: ['react', 'react-router', 'alt']
   },
   resolve: {
