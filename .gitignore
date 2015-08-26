@@ -1,2 +1,5 @@
 gin-bin
 run.sh
+public/*.js
+public/*.html
+node_modules
