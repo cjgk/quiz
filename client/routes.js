@@ -1,12 +1,13 @@
 import React from 'react';
-import {Route} from 'react-router';
+import {Route, DefaultRoute} from 'react-router';
 
 import Main from 'components/main';
-import Example from 'components/example';
+import LoginBox from 'components/loginbox';
+
 
 const routes = (
     <Route handler={Main}>
-        <Route name="example" handler={Example} />
+        <DefaultRoute handler={LoginBox}/>
     </Route>
 );
 
