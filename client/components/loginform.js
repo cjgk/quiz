@@ -1,28 +1,18 @@
 import React from 'react';
+import reqwest from 'reqwest';
 
 class LoginForm extends React.Component {
-    /*
-    handleSubmit: function (e) {
-        e.preventDefault();
+    
+    handleSubmit = evt => {
+        evt.preventDefault()
 
         var email = this.refs.email.getDOMNode().value;
         var password = this.refs.password.getDOMNode().value;
-        var data = {email: email, password: password};
+        var loginData = {email: email, password: password};
 
-        reqwest({
-            url: '/sessions',
-            method: 'post',
-            data: data,
+        this.props.onLoginSubmit(loginData);
+    }
 
-            success: function (resp) {
-                console.log(resp);
-            }
-        });
-
-        console.log(data);
-
-    },
-    */
     render () {
         return (
             <form onSubmit={this.handleSubmit}>

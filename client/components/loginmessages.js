@@ -2,22 +2,16 @@ import React from 'react';
 import LoginMessage from 'components/loginmessage';
 
 class LoginMessages extends React.Component {
-    constructor() {
-        super();
-
-        this.state = {
-            messages: []
-        };
-    }
 
     render() {
+        var messages = [];
         this.props.messages.forEach(function(message) {
             messages.push(<LoginMessage>{message}</LoginMessage>);
         }.bind(this));
 
         return (
             <ul className="loginbox-messages">
-                {this.state.messages}
+                {messages}
             </ul>
         );
     }
