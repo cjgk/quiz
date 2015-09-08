@@ -1,13 +1,9 @@
 import React from 'react';
 import reqwest from 'reqwest';
 
-import connectToStores from 'alt/utils/connectToStores';
-import LoginStore from 'stores/loginStore';
-
 import LoginForm from 'components/loginform';
 import LoginMessages from 'components/loginmessages';
 
-@connectToStores
 class LoginBox extends React.Component {
     constructor(props) {
         super(props);
@@ -16,14 +12,6 @@ class LoginBox extends React.Component {
             messages: []
         };
 
-    }
-
-    static getStores(props) {
-        return [LoginStore];
-    }
-
-    static getPropsFromStores(props) {
-        return LoginStore.getState();
     }
 
     handleLoginSubmit = (loginData) => {
