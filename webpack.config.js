@@ -9,7 +9,7 @@ module.exports = {
   target: 'web',
   entry: {
     bundle: path.join(clientPath, 'quiz.js'),
-    common: ['react', 'react-router', 'alt']
+    common: ['react', 'react-router', 'reflux']
   },
   resolve: {
     root: clientPath,
