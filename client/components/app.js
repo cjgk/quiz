@@ -1,7 +1,7 @@
 import React from 'react';  
 import {RouteHandler, Link} from 'react-router';
 
-class Main extends React.Component {  
+class App extends React.Component {  
   render() {
     return (
       <div>
@@ -12,4 +12,4 @@ class Main extends React.Component {
   }
 }
 
-export default Main;  
+export default App;
