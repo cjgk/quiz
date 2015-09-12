@@ -1,18 +1,19 @@
-package main
+package storage
 
 import (
 	"database/sql"
 	"errors"
-	"github.com/coopernurse/gorp"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"os"
 	"time"
+
+	"github.com/coopernurse/gorp"
+	_ "github.com/mattn/go-sqlite3"
 )
 
-type services struct {
-	user userServicer
-	game gameServicer
+type Services struct {
+	User UserServicer
+	Game GameServicer
 }
 
 func checkErr(err error, msg string) {
@@ -26,7 +27,7 @@ var (
 )
 
 // Initialize gorp for struct mapping
-func initDb() *gorp.DbMap {
+func InitDb() *gorp.DbMap {
 	db, err := sql.Open("sqlite3", "/tmp/quiz.sqlite")
 	checkErr(err, "DB INIT")
 
@@ -48,10 +49,10 @@ func initDb() *gorp.DbMap {
 }
 
 // Initalize services
-func initTableServices(dbmap *gorp.DbMap) services {
-	services := services{
-		user: newUserService(dbmap),
-		game: newGameService(dbmap),
+func InitTableServices(dbmap *gorp.DbMap) Services {
+	services := Services{
+		User: NewUserService(dbmap),
+		Game: NewGameService(dbmap),
 	}
 
 	return services

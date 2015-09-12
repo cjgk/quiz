@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 	"encoding/json"
@@ -6,20 +6,22 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/cjgk/quiz/storage"
+
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 )
 
-type userController struct {
-	appController
-	services *services
-	session  *sessions.CookieStore
+type UserController struct {
+	AppController
+	Services *storage.Services
+	Session  *sessions.CookieStore
 }
 
-func (c *userController) index(w http.ResponseWriter, r *http.Request) error {
-	var users []User
+func (c *UserController) Index(w http.ResponseWriter, r *http.Request) error {
+	var users []storage.User
 
-	err := c.services.user.RetrieveSet(&users)
+	err := c.Services.User.RetrieveSet(&users)
 	if err != nil {
 		return err
 	}
@@ -34,7 +36,7 @@ func (c *userController) index(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *userController) get(w http.ResponseWriter, r *http.Request) error {
+func (c *UserController) Get(w http.ResponseWriter, r *http.Request) error {
 	user, err := c.getRequestedUser(r)
 	if err != nil {
 		return err
@@ -50,18 +52,18 @@ func (c *userController) get(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *userController) post(w http.ResponseWriter, r *http.Request) error {
+func (c *UserController) Post(w http.ResponseWriter, r *http.Request) error {
 	name := r.FormValue("name")
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 
-	user, err := newUser(name, email, password)
+	user, err := storage.NewUser(name, email, password)
 	if err != nil {
 		return Err400
 	}
 
-	if err := c.services.user.Save(&user); err != nil {
-		if err == ErrEmailExists {
+	if err := c.Services.User.Save(&user); err != nil {
+		if err == storage.ErrEmailExists {
 			return Err409
 		}
 
@@ -79,13 +81,13 @@ func (c *userController) post(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *userController) delete(w http.ResponseWriter, r *http.Request) error {
+func (c *UserController) Delete(w http.ResponseWriter, r *http.Request) error {
 	user, err := c.getRequestedUser(r)
 	if err != nil {
 		return err
 	}
 
-	err = c.services.user.Delete(&user)
+	err = c.Services.User.Delete(&user)
 	if err != nil {
 		return Err500
 	}
@@ -93,7 +95,7 @@ func (c *userController) delete(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *userController) put(w http.ResponseWriter, r *http.Request) error {
+func (c *UserController) Put(w http.ResponseWriter, r *http.Request) error {
 	user, err := c.getRequestedUser(r)
 	if err != nil {
 		return err
@@ -112,7 +114,7 @@ func (c *userController) put(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	if len(password) > 0 {
-		pwHash, err := HashPw(password)
+		pwHash, err := storage.HashPw(password)
 		if err != nil {
 			return err
 		}
@@ -120,7 +122,7 @@ func (c *userController) put(w http.ResponseWriter, r *http.Request) error {
 		user.Password = pwHash
 	}
 
-	err = c.services.user.Save(&user)
+	err = c.Services.User.Save(&user)
 	if err != nil {
 		return Err500
 	}
@@ -135,17 +137,17 @@ func (c *userController) put(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *userController) getRequestedUser(r *http.Request) (User, error) {
+func (c *UserController) getRequestedUser(r *http.Request) (storage.User, error) {
 	vars := mux.Vars(r)
-	user := User{}
+	user := storage.User{}
 
 	userId, err := strconv.Atoi(vars["key"])
 	if err != nil {
 		return user, Err400
 	}
 
-	err = c.services.user.Retrieve(&user, userId)
-	if err == ErrNotFound {
+	err = c.Services.User.Retrieve(&user, userId)
+	if err == storage.ErrNotFound {
 		return user, Err404
 	} else if err != nil {
 		return user, Err500

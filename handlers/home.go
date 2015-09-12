@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 	"fmt"
@@ -6,16 +6,18 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/cjgk/quiz/storage"
+
 	"github.com/gorilla/sessions"
 )
 
-type homeController struct {
-	appController
-	services *services
-	session  *sessions.CookieStore
+type HomeController struct {
+	AppController
+	Services *storage.Services
+	Session  *sessions.CookieStore
 }
 
-func (c *homeController) index(w http.ResponseWriter, r *http.Request) error {
+func (c *HomeController) Index(w http.ResponseWriter, r *http.Request) error {
 
 	indexFile, err := ioutil.ReadFile("public/index.html")
 	if err != nil {

@@ -1,22 +1,23 @@
-package main
+package handlers
 
 import (
 	"errors"
-	"github.com/gorilla/sessions"
 	"net/http"
+
+	"github.com/gorilla/sessions"
 )
 
-type action func(rw http.ResponseWriter, r *http.Request) error
+type Action func(rw http.ResponseWriter, r *http.Request) error
 
-type appController struct{}
+type AppController struct{}
 
-func (c *appController) action(a action) http.Handler {
+func (c *AppController) Action(a Action) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-		c.runAction(a, rw, r)
+		c.RunAction(a, rw, r)
 	})
 }
 
-func (c *appController) authAction(a action, sess *sessions.CookieStore) http.Handler {
+func (c *AppController) AuthAction(a Action, sess *sessions.CookieStore) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		session, _ := sess.Get(r, "login")
 		userId := session.Values["id"]
@@ -26,11 +27,11 @@ func (c *appController) authAction(a action, sess *sessions.CookieStore) http.Ha
 			return
 		}
 
-		c.runAction(a, rw, r)
+		c.RunAction(a, rw, r)
 	})
 }
 
-func (c *appController) runAction(a action, rw http.ResponseWriter, r *http.Request) {
+func (c *AppController) RunAction(a Action, rw http.ResponseWriter, r *http.Request) {
 	if err := a(rw, r); err != nil {
 		switch err {
 		case Err400:

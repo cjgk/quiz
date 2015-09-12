@@ -1,8 +1,8 @@
-package main
+package storage
 
-type mockUserService struct{}
+type MockUserService struct{}
 
-func (mus mockUserService) Retrieve(user *User, id int) error {
+func (mus MockUserService) Retrieve(user *User, id int) error {
 	if id != 1 {
 		return ErrNotFound
 	}
@@ -15,7 +15,7 @@ func (mus mockUserService) Retrieve(user *User, id int) error {
 	return nil
 }
 
-func (mus mockUserService) RetrieveSet(users *[]User) error {
+func (mus MockUserService) RetrieveSet(users *[]User) error {
 	user1 := User{
 		Id:      1,
 		Deleted: false,
@@ -35,11 +35,11 @@ func (mus mockUserService) RetrieveSet(users *[]User) error {
 	return nil
 }
 
-func (mus mockUserService) RetrieveByEmail(user *User, email string) error {
+func (mus MockUserService) RetrieveByEmail(user *User, email string) error {
 	return nil
 }
 
-func (mus mockUserService) Save(user *User) error {
+func (mus MockUserService) Save(user *User) error {
 	if user.Id == 0 {
 		user.Id = 3
 	}
@@ -47,7 +47,7 @@ func (mus mockUserService) Save(user *User) error {
 	return nil
 }
 
-func (mus mockUserService) Delete(user *User) error {
+func (mus MockUserService) Delete(user *User) error {
 	user.Deleted = true
 	return nil
 }

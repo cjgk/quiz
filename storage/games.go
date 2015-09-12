@@ -1,11 +1,12 @@
-package main
+package storage
 
 import (
 	"database/sql"
 	"fmt"
-	"github.com/coopernurse/gorp"
 	"os"
 	"time"
+
+	"github.com/coopernurse/gorp"
 )
 
 type Game struct {
@@ -17,7 +18,7 @@ type Game struct {
 	Name    string    `db:"name"    json:"name"`
 }
 
-func newGame(name string, userId int) Game {
+func NewGame(name string, userId int) Game {
 	return Game{
 		Deleted: false,
 		Created: time.Now().UTC(),
@@ -27,28 +28,28 @@ func newGame(name string, userId int) Game {
 	}
 }
 
-type gameServicer interface {
+type GameServicer interface {
 	Retrieve(game *Game, id int) error
 	RetrieveSet(games *[]Game) error
 	Save(game *Game) error
 	Delete(game *Game) error
 }
 
-type gameService struct {
+type GameService struct {
 	Db *gorp.DbMap
 }
 
-func newGameService(dbmap *gorp.DbMap) gameServicer {
+func NewGameService(dbmap *gorp.DbMap) GameServicer {
 	var environment string = os.Getenv("GOENV")
 
 	if environment == "TEST" {
 		//			return mockGameService{}
 	}
 
-	return gameService{Db: dbmap}
+	return GameService{Db: dbmap}
 }
 
-func (us gameService) Retrieve(game *Game, id int) error {
+func (us GameService) Retrieve(game *Game, id int) error {
 	query := "select * from games where deleted = 0 and id = ?"
 	err := us.Db.SelectOne(&game, query, id)
 	if err == sql.ErrNoRows {
@@ -60,7 +61,7 @@ func (us gameService) Retrieve(game *Game, id int) error {
 	return nil
 }
 
-func (us gameService) RetrieveSet(games *[]Game) error {
+func (us GameService) RetrieveSet(games *[]Game) error {
 	query := "select * from games where deleted = 0"
 	_, err := us.Db.Select(games, query)
 	if err != nil {
@@ -70,7 +71,7 @@ func (us gameService) RetrieveSet(games *[]Game) error {
 	return nil
 }
 
-func (us gameService) Save(game *Game) error {
+func (us GameService) Save(game *Game) error {
 	var err error
 
 	if game.Id == 0 {
@@ -87,7 +88,7 @@ func (us gameService) Save(game *Game) error {
 	return nil
 }
 
-func (us gameService) Delete(game *Game) error {
+func (us GameService) Delete(game *Game) error {
 	game.Deleted = true
 	if _, err := us.Db.Update(game); err != nil {
 		return err

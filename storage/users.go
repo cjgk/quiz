@@ -1,13 +1,14 @@
-package main
+package storage
 
 import (
-	"code.google.com/p/go.crypto/bcrypt"
 	"database/sql"
 	"errors"
-	"github.com/coopernurse/gorp"
 	"log"
 	"os"
 	"strings"
+
+	"code.google.com/p/go.crypto/bcrypt"
+	"github.com/coopernurse/gorp"
 )
 
 var ErrEmailExists = errors.New("users: email exists")
@@ -20,7 +21,7 @@ type User struct {
 	Password string `db:"password" json:"-"`
 }
 
-func newUser(name, email, password string) (User, error) {
+func NewUser(name, email, password string) (User, error) {
 	user := User{}
 
 	pwHash, err := HashPw(password)
@@ -38,7 +39,7 @@ func newUser(name, email, password string) (User, error) {
 	return user, nil
 }
 
-type userServicer interface {
+type UserServicer interface {
 	Retrieve(user *User, id int) error
 	RetrieveSet(users *[]User) error
 	Save(user *User) error
@@ -46,21 +47,21 @@ type userServicer interface {
 	RetrieveByEmail(user *User, email string) error
 }
 
-type userService struct {
+type UserService struct {
 	Db *gorp.DbMap
 }
 
-func newUserService(dbmap *gorp.DbMap) userServicer {
+func NewUserService(dbmap *gorp.DbMap) UserServicer {
 	var environment string = os.Getenv("GOENV")
 
 	if environment == "TEST" {
-		return mockUserService{}
+		return MockUserService{}
 	}
 
-	return userService{Db: dbmap}
+	return UserService{Db: dbmap}
 }
 
-func (us userService) Retrieve(user *User, id int) error {
+func (us UserService) Retrieve(user *User, id int) error {
 	query := "select * from users where deleted = 0 and id = ?"
 	err := us.Db.SelectOne(&user, query, id)
 	if err == sql.ErrNoRows {
@@ -72,7 +73,7 @@ func (us userService) Retrieve(user *User, id int) error {
 	return nil
 }
 
-func (us userService) RetrieveSet(users *[]User) error {
+func (us UserService) RetrieveSet(users *[]User) error {
 	query := "select * from users where deleted = 0"
 	_, err := us.Db.Select(users, query)
 	if err != nil {
@@ -82,7 +83,7 @@ func (us userService) RetrieveSet(users *[]User) error {
 	return nil
 }
 
-func (us userService) RetrieveByEmail(user *User, email string) error {
+func (us UserService) RetrieveByEmail(user *User, email string) error {
 	query := "select * from users where deleted = 0 and email = ?"
 	err := us.Db.SelectOne(&user, query, email)
 	if err == sql.ErrNoRows {
@@ -94,7 +95,7 @@ func (us userService) RetrieveByEmail(user *User, email string) error {
 	return nil
 }
 
-func (us userService) Save(user *User) error {
+func (us UserService) Save(user *User) error {
 	var err error
 
 	if user.Id == 0 {
@@ -114,7 +115,7 @@ func (us userService) Save(user *User) error {
 	return nil
 }
 
-func (us userService) Delete(user *User) error {
+func (us UserService) Delete(user *User) error {
 	user.Deleted = true
 	if _, err := us.Db.Update(user); err != nil {
 		return err
@@ -134,7 +135,7 @@ func HashPw(pass string) (string, error) {
 	return strHashPass, nil
 }
 
-func validatePw(pass string, hash string) error {
+func ValidatePw(pass string, hash string) error {
 	bytePass := []byte(pass)
 	byteHash := []byte(hash)
 
