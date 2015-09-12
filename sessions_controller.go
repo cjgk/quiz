@@ -1,8 +1,11 @@
 package main
 
 import (
-	"github.com/gorilla/sessions"
+	"encoding/json"
+	"fmt"
 	"net/http"
+
+	"github.com/gorilla/sessions"
 )
 
 type sessionsController struct {
@@ -32,7 +35,13 @@ func (c *sessionsController) post(w http.ResponseWriter, r *http.Request) error 
 	session.Values["id"] = user.Id
 	session.Save(r, w)
 
+	jsonUser, err := json.Marshal(user)
+	if err != nil {
+		return err
+	}
+
 	w.WriteHeader(http.StatusCreated)
+	fmt.Fprint(w, string(jsonUser))
 
 	return nil
 }

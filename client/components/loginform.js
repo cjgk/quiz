@@ -1,27 +1,38 @@
 import React from 'react';
-import reqwest from 'reqwest';
 
-class LoginForm extends React.Component {
-    
-    handleSubmit = evt => {
+let LoginForm = React.createClass({
+    getInitialState() {
+        return {
+            email: "user1@example.com",
+            password: "password1"
+        }
+    },
+
+    handleSubmit(evt) {
         evt.preventDefault()
 
-        var email = this.refs.email.getDOMNode().value;
-        var password = this.refs.password.getDOMNode().value;
-        var loginData = {email: email, password: password};
+        var loginData = this.state;
 
         this.props.onLoginSubmit(loginData);
-    }
+    },
 
     render () {
         return (
             <form onSubmit={this.handleSubmit}>
-                <input type="text" ref="email" placeholder="email" />
-                <input type="text" ref="password" placeholder="pass" />
+                <input
+                    type="text" 
+                    ref="email" 
+                    placeholder="email" 
+                    onChange={(e) => this.setState({email: e.target.value.trim()})} />
+                <input 
+                    type="text" 
+                    ref="password" 
+                    placeholder="pass" 
+                    onChange={(e) => this.setState({password: e.target.value.trim()})} />
                 <input type="submit" value="Login" />
             </form>
         );
     }
-}
+});
 
 export default LoginForm;
