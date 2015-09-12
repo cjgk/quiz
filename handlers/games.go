@@ -12,16 +12,16 @@ import (
 	"github.com/gorilla/sessions"
 )
 
-type GameController struct {
+type GameHandler struct {
 	AppController
 	Services *storage.Services
 	Session  *sessions.CookieStore
 }
 
-func (c *GameController) Index(w http.ResponseWriter, r *http.Request) error {
+func (h *GameHandler) Index(w http.ResponseWriter, r *http.Request) error {
 	var games []storage.Game
 
-	err := c.Services.Game.RetrieveSet(&games)
+	err := h.Services.Game.RetrieveSet(&games)
 	if err != nil {
 		return err
 	}
@@ -36,8 +36,8 @@ func (c *GameController) Index(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *GameController) Get(w http.ResponseWriter, r *http.Request) error {
-	game, err := c.getRequestedGame(r)
+func (h *GameHandler) Get(w http.ResponseWriter, r *http.Request) error {
+	game, err := h.getRequestedGame(r)
 	if err != nil {
 		return err
 	}
@@ -52,13 +52,13 @@ func (c *GameController) Get(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *GameController) Post(w http.ResponseWriter, r *http.Request) error {
+func (h *GameHandler) Post(w http.ResponseWriter, r *http.Request) error {
 	name := r.FormValue("name")
 	userId := 1
 
 	game := storage.NewGame(name, userId)
 
-	if err := c.Services.Game.Save(&game); err != nil {
+	if err := h.Services.Game.Save(&game); err != nil {
 		return Err500
 	}
 
@@ -73,13 +73,13 @@ func (c *GameController) Post(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *GameController) Delete(w http.ResponseWriter, r *http.Request) error {
-	game, err := c.getRequestedGame(r)
+func (h *GameHandler) Delete(w http.ResponseWriter, r *http.Request) error {
+	game, err := h.getRequestedGame(r)
 	if err != nil {
 		return err
 	}
 
-	err = c.Services.Game.Delete(&game)
+	err = h.Services.Game.Delete(&game)
 	if err != nil {
 		return Err500
 	}
@@ -87,8 +87,8 @@ func (c *GameController) Delete(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *GameController) Put(w http.ResponseWriter, r *http.Request) error {
-	game, err := c.getRequestedGame(r)
+func (h *GameHandler) Put(w http.ResponseWriter, r *http.Request) error {
+	game, err := h.getRequestedGame(r)
 	if err != nil {
 		return err
 	}
@@ -99,7 +99,7 @@ func (c *GameController) Put(w http.ResponseWriter, r *http.Request) error {
 		game.Name = name
 	}
 
-	err = c.Services.Game.Save(&game)
+	err = h.Services.Game.Save(&game)
 	if err != nil {
 		return Err500
 	}
@@ -114,7 +114,7 @@ func (c *GameController) Put(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *GameController) getRequestedGame(r *http.Request) (storage.Game, error) {
+func (h *GameHandler) getRequestedGame(r *http.Request) (storage.Game, error) {
 	vars := mux.Vars(r)
 	game := storage.Game{}
 
@@ -123,7 +123,7 @@ func (c *GameController) getRequestedGame(r *http.Request) (storage.Game, error)
 		return game, Err400
 	}
 
-	err = c.Services.Game.Retrieve(&game, gameId)
+	err = h.Services.Game.Retrieve(&game, gameId)
 	if err == storage.ErrNotFound {
 		return game, Err404
 	} else if err != nil {

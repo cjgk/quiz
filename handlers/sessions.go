@@ -9,18 +9,18 @@ import (
 	"github.com/gorilla/sessions"
 )
 
-type SessionsController struct {
+type SessionHandler struct {
 	AppController
 	Services *storage.Services
 	Session  *sessions.CookieStore
 }
 
-func (c *SessionsController) Post(w http.ResponseWriter, r *http.Request) error {
+func (h *SessionHandler) Post(w http.ResponseWriter, r *http.Request) error {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 
 	user := storage.User{}
-	err := c.Services.User.RetrieveByEmail(&user, email)
+	err := h.Services.User.RetrieveByEmail(&user, email)
 	if err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func (c *SessionsController) Post(w http.ResponseWriter, r *http.Request) error 
 		return Err401
 	}
 
-	session, err := c.Session.Get(r, "login")
+	session, err := h.Session.Get(r, "login")
 	if err != nil {
 		return err
 	}
@@ -47,8 +47,8 @@ func (c *SessionsController) Post(w http.ResponseWriter, r *http.Request) error 
 	return nil
 }
 
-func (c *SessionsController) Delete(w http.ResponseWriter, r *http.Request) error {
-	session, err := c.Session.Get(r, "login")
+func (h *SessionHandler) Delete(w http.ResponseWriter, r *http.Request) error {
+	session, err := h.Session.Get(r, "login")
 	if err != nil {
 		return err
 	}
@@ -60,7 +60,7 @@ func (c *SessionsController) Delete(w http.ResponseWriter, r *http.Request) erro
 	return nil
 }
 
-func (c *SessionsController) NotImp(w http.ResponseWriter, r *http.Request) error {
+func (h *SessionHandler) NotImp(w http.ResponseWriter, r *http.Request) error {
 	w.WriteHeader(http.StatusNotImplemented)
 	return nil
 }

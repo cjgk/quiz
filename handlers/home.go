@@ -11,13 +11,13 @@ import (
 	"github.com/gorilla/sessions"
 )
 
-type HomeController struct {
+type HomeHandler struct {
 	AppController
 	Services *storage.Services
 	Session  *sessions.CookieStore
 }
 
-func (c *HomeController) Index(w http.ResponseWriter, r *http.Request) error {
+func (h *HomeHandler) Index(w http.ResponseWriter, r *http.Request) error {
 
 	indexFile, err := ioutil.ReadFile("public/index.html")
 	if err != nil {

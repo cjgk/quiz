@@ -24,11 +24,11 @@ func main() {
 	// Set up Table services
 	tableServices := storage.InitTableServices(dbmap)
 
-	// Create controllers and add ervices to them
-	home := &handlers.HomeController{Services: &tableServices, Session: sessionsStore}
-	users := &handlers.UserController{Services: &tableServices, Session: sessionsStore}
-	games := &handlers.GameController{Services: &tableServices, Session: sessionsStore}
-	sessions := &handlers.SessionsController{Services: &tableServices, Session: sessionsStore}
+	// Create handlers and add services to them
+	home := &handlers.HomeHandler{Services: &tableServices, Session: sessionsStore}
+	users := &handlers.UserHandler{Services: &tableServices, Session: sessionsStore}
+	games := &handlers.GameHandler{Services: &tableServices, Session: sessionsStore}
+	sessions := &handlers.SessionHandler{Services: &tableServices, Session: sessionsStore}
 
 	// Set up router
 	router := mux.NewRouter()

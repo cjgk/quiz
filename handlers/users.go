@@ -12,16 +12,16 @@ import (
 	"github.com/gorilla/sessions"
 )
 
-type UserController struct {
+type UserHandler struct {
 	AppController
 	Services *storage.Services
 	Session  *sessions.CookieStore
 }
 
-func (c *UserController) Index(w http.ResponseWriter, r *http.Request) error {
+func (h *UserHandler) Index(w http.ResponseWriter, r *http.Request) error {
 	var users []storage.User
 
-	err := c.Services.User.RetrieveSet(&users)
+	err := h.Services.User.RetrieveSet(&users)
 	if err != nil {
 		return err
 	}
@@ -36,8 +36,8 @@ func (c *UserController) Index(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *UserController) Get(w http.ResponseWriter, r *http.Request) error {
-	user, err := c.getRequestedUser(r)
+func (h *UserHandler) Get(w http.ResponseWriter, r *http.Request) error {
+	user, err := h.getRequestedUser(r)
 	if err != nil {
 		return err
 	}
@@ -52,7 +52,7 @@ func (c *UserController) Get(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *UserController) Post(w http.ResponseWriter, r *http.Request) error {
+func (h *UserHandler) Post(w http.ResponseWriter, r *http.Request) error {
 	name := r.FormValue("name")
 	email := r.FormValue("email")
 	password := r.FormValue("password")
@@ -62,7 +62,7 @@ func (c *UserController) Post(w http.ResponseWriter, r *http.Request) error {
 		return Err400
 	}
 
-	if err := c.Services.User.Save(&user); err != nil {
+	if err := h.Services.User.Save(&user); err != nil {
 		if err == storage.ErrEmailExists {
 			return Err409
 		}
@@ -81,13 +81,13 @@ func (c *UserController) Post(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *UserController) Delete(w http.ResponseWriter, r *http.Request) error {
-	user, err := c.getRequestedUser(r)
+func (h *UserHandler) Delete(w http.ResponseWriter, r *http.Request) error {
+	user, err := h.getRequestedUser(r)
 	if err != nil {
 		return err
 	}
 
-	err = c.Services.User.Delete(&user)
+	err = h.Services.User.Delete(&user)
 	if err != nil {
 		return Err500
 	}
@@ -95,8 +95,8 @@ func (c *UserController) Delete(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *UserController) Put(w http.ResponseWriter, r *http.Request) error {
-	user, err := c.getRequestedUser(r)
+func (h *UserHandler) Put(w http.ResponseWriter, r *http.Request) error {
+	user, err := h.getRequestedUser(r)
 	if err != nil {
 		return err
 	}
@@ -122,7 +122,7 @@ func (c *UserController) Put(w http.ResponseWriter, r *http.Request) error {
 		user.Password = pwHash
 	}
 
-	err = c.Services.User.Save(&user)
+	err = h.Services.User.Save(&user)
 	if err != nil {
 		return Err500
 	}
@@ -137,7 +137,7 @@ func (c *UserController) Put(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (c *UserController) getRequestedUser(r *http.Request) (storage.User, error) {
+func (h *UserHandler) getRequestedUser(r *http.Request) (storage.User, error) {
 	vars := mux.Vars(r)
 	user := storage.User{}
 
@@ -146,7 +146,7 @@ func (c *UserController) getRequestedUser(r *http.Request) (storage.User, error)
 		return user, Err400
 	}
 
-	err = c.Services.User.Retrieve(&user, userId)
+	err = h.Services.User.Retrieve(&user, userId)
 	if err == storage.ErrNotFound {
 		return user, Err404
 	} else if err != nil {
