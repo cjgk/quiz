@@ -1,6 +1,6 @@
 import Reflux from 'reflux';
 import Request from 'reqwest';
-import LoginActions from 'actions';
+import Actions from 'actions';
 import Cookie from 'js-cookie';
 
 const authSkel = {
@@ -13,7 +13,7 @@ const authSkel = {
 let auth = Object.assign({}, authSkel);
 
 var LoginStore = Reflux.createStore({
-    listenables: LoginActions,
+    listenables: Actions,
 
     onAuthenticate(loginData) {
         Request({

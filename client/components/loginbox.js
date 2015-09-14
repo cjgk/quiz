@@ -1,7 +1,7 @@
 import Reflux from 'reflux';
 import React from 'react';
 
-import LoginActions from 'actions';
+import Actions from 'actions';
 import LoginStore from 'stores/loginstore';
 
 import LoginForm from 'components/loginform';
@@ -12,7 +12,7 @@ const LoginBox = React.createClass({
     mixins: [Reflux.connect(LoginStore)],
 
     handleSubmit(loginData) {
-        LoginActions.authenticate(loginData);
+        Actions.authenticate(loginData);
     },
 
     render() {

@@ -1,8 +1,9 @@
 import Reflux from 'reflux';
 import reqwest from 'reqwest';
 
-const LoginActions = Reflux.createActions([
-    'authenticate'
+const Actions = Reflux.createActions([
+    'authenticate',
+    'updateGameList'
 ]);
 
-export default LoginActions;
+export default Actions;
