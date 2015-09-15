@@ -24,7 +24,6 @@ let GameStore = Reflux.createStore({
 
                 for (let i = 0; i < games.length; i++) {
                     let game = games[i];
-                    game = Object.assign(gameSkel, game);
                     gameList.push(game);
                 }
 
