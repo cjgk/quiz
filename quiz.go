@@ -35,26 +35,27 @@ func main() {
 	router.StrictSlash(true)
 
 	// Home route
-	router.Handle("/", home.Action(home.Index)).Methods("GET")
+	//router.Handle("/", home.Action(home.Index)).Methods("GET")
+	router.NotFoundHandler = home.Action(home.Index)
 
 	// User routes
-	router.Handle("/users", users.AuthAction(users.Index, sessionsStore)).Methods("GET")
-	router.Handle("/users/{key}", users.AuthAction(users.Get, sessionsStore)).Methods("GET")
-	router.Handle("/users", users.Action(users.Post)).Methods("POST")
-	router.Handle("/users/{key}", users.AuthAction(users.Put, sessionsStore)).Methods("PUT")
-	router.Handle("/users/{key}", users.AuthAction(users.Delete, sessionsStore)).Methods("DELETE")
+	router.Handle("/api/1.0/users", users.AuthAction(users.Index, sessionsStore)).Methods("GET")
+	router.Handle("/api/1.0/users/{key}", users.AuthAction(users.Get, sessionsStore)).Methods("GET")
+	router.Handle("/api/1.0/users", users.Action(users.Post)).Methods("POST")
+	router.Handle("/api/1.0/users/{key}", users.AuthAction(users.Put, sessionsStore)).Methods("PUT")
+	router.Handle("/api/1.0/users/{key}", users.AuthAction(users.Delete, sessionsStore)).Methods("DELETE")
 
 	// Session routes
-	router.Handle("/sessions", sessions.Action(sessions.Post)).Methods("POST")
-	router.Handle("/sessions", sessions.AuthAction(sessions.Delete, sessionsStore)).Methods("DELETE")
-	router.Handle("/sessions.*", sessions.Action(sessions.NotImp)).Methods("GET", "PUT")
+	router.Handle("/api/1.0/sessions", sessions.Action(sessions.Post)).Methods("POST")
+	router.Handle("/api/1.0/sessions", sessions.AuthAction(sessions.Delete, sessionsStore)).Methods("DELETE")
+	router.Handle("/api/1.0/sessions.*", sessions.Action(sessions.NotImp)).Methods("GET", "PUT")
 
 	// Game routes
-	router.Handle("/games", games.AuthAction(games.Index, sessionsStore)).Methods("GET")
-	router.Handle("/games/{key}", games.AuthAction(games.Get, sessionsStore)).Methods("GET")
-	router.Handle("/games", games.AuthAction(games.Post, sessionsStore)).Methods("POST")
-	router.Handle("/games/{key}", games.AuthAction(games.Put, sessionsStore)).Methods("PUT")
-	router.Handle("/games/{key}", games.AuthAction(games.Delete, sessionsStore)).Methods("DELETE")
+	router.Handle("/api/1.0/games", games.AuthAction(games.Index, sessionsStore)).Methods("GET")
+	router.Handle("/api/1.0/games/{key}", games.AuthAction(games.Get, sessionsStore)).Methods("GET")
+	router.Handle("/api/1.0/games", games.AuthAction(games.Post, sessionsStore)).Methods("POST")
+	router.Handle("/api/1.0/games/{key}", games.AuthAction(games.Put, sessionsStore)).Methods("PUT")
+	router.Handle("/api/1.0/games/{key}", games.AuthAction(games.Delete, sessionsStore)).Methods("DELETE")
 
 	// Static route
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fileServer))
