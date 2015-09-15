@@ -16,7 +16,7 @@ let GameStore = Reflux.createStore({
     
     onUpdateGameList() {
         Request({
-            url: '/games',
+            url: '/api/1.0/games',
             method: 'get',
 
             success: function (resp) {

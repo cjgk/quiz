@@ -17,7 +17,7 @@ var LoginStore = Reflux.createStore({
 
     onAuthenticate(loginData) {
         Request({
-            url: '/sessions',
+            url: '/api/1.0/sessions',
             method: 'post',
             data: loginData,
 
