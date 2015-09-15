@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -20,8 +21,18 @@ type GameHandler struct {
 
 func (h *GameHandler) Index(w http.ResponseWriter, r *http.Request) error {
 	var games []storage.Game
+	var userId int
 
-	err := h.Services.Game.RetrieveSet(&games)
+	sess, err := h.Session.Get(r, "login")
+	log.Print(sess)
+
+	if id, ok := sess.Values["id"]; ok {
+		userId = id.(int)
+	} else {
+		userId = 0
+	}
+
+	err = h.Services.Game.RetrieveSet(&games, userId)
 	if err != nil {
 		return err
 	}

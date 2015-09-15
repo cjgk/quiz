@@ -30,7 +30,7 @@ func NewGame(name string, userId int) Game {
 
 type GameServicer interface {
 	Retrieve(game *Game, id int) error
-	RetrieveSet(games *[]Game) error
+	RetrieveSet(games *[]Game, userId int) error
 	Save(game *Game) error
 	Delete(game *Game) error
 }
@@ -61,9 +61,17 @@ func (us GameService) Retrieve(game *Game, id int) error {
 	return nil
 }
 
-func (us GameService) RetrieveSet(games *[]Game) error {
-	query := "select * from games where deleted = 0"
-	_, err := us.Db.Select(games, query)
+func (us GameService) RetrieveSet(games *[]Game, userId int) error {
+	var err error = nil
+
+	if userId == 0 {
+		query := "select * from games where deleted = 0"
+		_, err = us.Db.Select(games, query)
+	} else {
+		query := "select * from games where deleted = 0 and user_id = ?"
+		_, err = us.Db.Select(games, query, userId)
+	}
+
 	if err != nil {
 		return err
 	}
