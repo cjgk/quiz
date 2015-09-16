@@ -3,7 +3,8 @@ import reqwest from 'reqwest';
 
 const Actions = Reflux.createActions([
     'authenticate',
-    'updateGameList'
+    'updateGameList',
+    'showModal'
 ]);
 
 export default Actions;

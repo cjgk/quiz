@@ -28,7 +28,6 @@ let Home = React.createClass({
     render() {
         return (
             <div className="home">
-                <h2>Your games</h2>
                 <GameList games={this.state.games} />
             </div>
         );
