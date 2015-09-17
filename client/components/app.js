@@ -2,19 +2,34 @@ import React from 'react';
 import Reflux from 'reflux';
 import {RouteHandler, Link, Navigation, State} from 'react-router';
 
+import UiThemeManager from 'material-ui/lib/styles/theme-manager';
+import Colors from 'material-ui/lib/styles/colors';
+
 import LoginStore from 'stores/loginstore';
 import ModalStore from 'stores/modalstore';
 
 import Modal from 'components/modal';
 import GameForm from 'components/gameform';
 
+let ThemeManager = new(UiThemeManager);
+
 let App = React.createClass({
+    childContextTypes: {
+        muiTheme: React.PropTypes.object
+    },
+
     mixins: [
         Reflux.listenTo(LoginStore, 'onAuthUpdate'),
         Reflux.listenTo(ModalStore, 'onModalUpdate'),
         Navigation,
         State
     ],
+
+    getChildContext() {
+        return {
+            muiTheme: ThemeManager.getCurrentTheme()
+        }
+    },
 
     getInitialState() {
         return {
@@ -62,6 +77,12 @@ let App = React.createClass({
 
     componentDidMount() {
         this.sendToHomeIfAuthenticated();
+    },
+
+    componentWillMount() {
+        ThemeManager.setPalette({
+            accent1Color: Colors.deepOrange500
+        });
     },
 
     render() {

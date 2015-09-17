@@ -1,8 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
-
 import Actions from 'actions';
-
 import GameListItem from 'components/gamelistitem';
 
 let GameList = React.createClass({
