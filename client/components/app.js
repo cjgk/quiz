@@ -1,17 +1,25 @@
 import React from 'react';  
 import Reflux from 'reflux';
 import {RouteHandler, Link, Navigation, State} from 'react-router';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import UiThemeManager from 'material-ui/lib/styles/theme-manager';
 import Colors from 'material-ui/lib/styles/colors';
 
+import Actions from 'actions';
 import LoginStore from 'stores/loginstore';
 import ModalStore from 'stores/modalstore';
+import MenuStore from 'stores/menustore';
 
+import AppBar from 'material-ui/lib/app-bar';
+import LeftNav from 'material-ui/lib/left-nav';
 import Modal from 'components/modal';
 import GameForm from 'components/gameform';
 
 let ThemeManager = new(UiThemeManager);
+injectTapEventPlugin();
+
+let menuItems = [{route: "home", text: "Home"}];
 
 let App = React.createClass({
     childContextTypes: {
@@ -21,6 +29,7 @@ let App = React.createClass({
     mixins: [
         Reflux.listenTo(LoginStore, 'onAuthUpdate'),
         Reflux.listenTo(ModalStore, 'onModalUpdate'),
+        Reflux.listenTo(MenuStore, 'onMenuUpdate'),
         Navigation,
         State
     ],
@@ -46,6 +55,9 @@ let App = React.createClass({
         this.setState({modal: modalState});
     },
 
+    onMenuUpdate(menuState) {
+        this.refs.leftMenu.toggle();
+    },
 
     sendToHomeIfAuthenticated() {
         if (this.getPath() == '/' && this.state.auth.authenticated) {
@@ -54,7 +66,6 @@ let App = React.createClass({
     },
 
     getModal(modal) {
-        console.log(modal);
         if (modal.type == null) {
             return null;
         }
@@ -69,6 +80,10 @@ let App = React.createClass({
         return (
             <Modal><i>Hej!</i></Modal>
         );
+    },
+
+    onToggleMenu(e) {
+        Actions.toggleMenu();
     },
 
     componentDidUpdate() {
@@ -88,8 +103,19 @@ let App = React.createClass({
     render() {
         return (
             <div>
-               <h1>Quiz</h1>
-                <RouteHandler/>
+                <AppBar 
+                    title="Quiz"
+                    showMenuIconButton={this.state.auth.authenticated}
+                    onLeftIconButtonTouchTap={this.onToggleMenu}/>
+
+                <LeftNav
+                    ref="leftMenu"
+                    docked={false}
+                    menuItems={menuItems}/>
+
+                <div className="inside">
+                    <RouteHandler/>
+                </div>
 
                 {this.getModal(this.state.modal)}
             </div>
